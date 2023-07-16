@@ -2,11 +2,16 @@ const Item = require("../models/item");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Site Home Page");
+  res.render("index");
 });
 
 exports.item_list = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: item list");
+  const allItems = await Item.find({}, "name category price")
+    .sort({ name: 1 })
+    .populate("category")
+    .exec();
+
+  res.render("item_list", { title: "All Items", item_list: allItems });
 });
 
 exports.item_detail = asyncHandler(async (req, res, next) => {
