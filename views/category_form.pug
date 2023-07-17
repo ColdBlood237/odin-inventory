@@ -1,0 +1,18 @@
+extends layout 
+
+block content
+  .p-16.bg-base-200.h-screen
+    h1.text-5xl.mb-4.font-bold Add a new category
+    form(action="" method="POST").flex.flex-col.gap-4
+      div
+        label(for="name") Name:
+        input#name.input.input-bordered.w-full(type="text", name="name", placeholder="Type here", value=(undefined===category ? "" : category.name))
+      div
+        label(for="description") Description:
+        input#description.input.input-bordered.w-full(type="text", name="description" placeholder="Type here", value=(undefined===category ? "" : category.name))
+      button.btn.btn-neutral.self-start(type="submit") Submit
+    
+    if errors
+      ul 
+        for error in errors 
+         li!= error.msg

@@ -31,7 +31,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
 });
 
 exports.category_create_get = (req, res, next) => {
-  res.render("genre_form");
+  res.render("category_form");
 };
 
 exports.category_create_post = [
@@ -46,13 +46,17 @@ exports.category_create_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+
     const category = new Category({
       name: req.body.name,
       description: req.body.description,
     });
 
     if (!errors.isEmpty()) {
-      res.render("genre_form", { category: category, errors: errors.array() });
+      res.render("category_form", {
+        category: category,
+        errors: errors.array(),
+      });
       return;
     } else {
       const categoryExists = await Category.findOne({
