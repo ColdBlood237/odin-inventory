@@ -1,0 +1,11 @@
+extends layout 
+
+block content
+  .p-16.bg-base-200.h-screen.flex.flex-col.gap-4
+    h1.text-5xl.mb-4.font-bold #{item.name}
+    p.text-xl #{item.description}
+    .badge.badge-outline= item.category
+    .flex.gap-4.my-8
+      button.btn.btn-accent Update Item 
+      button.btn.btn-secondary Delete Item
+   

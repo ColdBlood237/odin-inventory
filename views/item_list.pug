@@ -1,0 +1,14 @@
+extends layout 
+
+block content
+  .p-16.bg-base-200.h-screen
+    h1.text-5xl.mb-16.font-bold= title
+    
+    .cards-container.flex.gap-16.justify-center
+      each item in item_list
+        a(href=item.url)
+          .card.w-96.bg-base-100.shadow-xl
+            .card-body
+              h2.card-title= item.name
+              p #{item.category.name}
+              p $#{item.price}

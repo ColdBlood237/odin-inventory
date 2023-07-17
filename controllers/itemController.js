@@ -15,7 +15,8 @@ exports.item_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: item detail: ${req.params.id}`);
+  const item = await Item.findById(req.params.id).populate("category").exec();
+  res.render("item_detail", { item: item });
 });
 
 exports.item_create_get = asyncHandler(async (req, res, next) => {

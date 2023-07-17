@@ -1,9 +1,9 @@
 doctype html
-html
+html(data-theme="light")
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+  body.divide-y
     .navbar.bg-base-100
       .flex-1
         a.btn.btn-ghost.normal-case.text-xl(href="/inventory/") Droid Depot
@@ -16,5 +16,5 @@ html
           li
             a(href='/inventory/item/create') Add Item
           li
-            a(href='/inventory/category/create') Add Category
+            a(href='/inventory/category/create') Add Category           
     block content

@@ -1,0 +1,17 @@
+extends layout 
+
+block content
+  .p-16.bg-base-200.h-screen
+    h1.text-5xl.mb-4.font-bold Products in the "#{category.name}" category
+    p.text-xl #{category.description}
+    .flex.gap-4.my-8
+      button.btn.btn-accent Update Category 
+      button.btn.btn-secondary Delete Category
+    p.mb-4 Items in this category:
+    .cards-container.flex.gap-16.justify-start
+      each item in category_items
+        a(href=item.url)
+          .card.w-96.bg-base-100.shadow-xl
+            .card-body
+              h2.card-title= item.name
+              p #{item.description}
