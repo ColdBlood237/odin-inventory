@@ -108,14 +108,45 @@ exports.category_delete_post = asyncHandler(async (req, res, next) => {
 
 exports.category_update_get = asyncHandler(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
-
   if (category === null) {
     const err = new Error("Category not foud");
     err.status = 404;
     return next(err);
   }
+  res.render("category_form", { category: category });
 });
 
-exports.category_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category update POST");
-});
+exports.category_update_post = [
+  body("name", "Category name must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description", "Category description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      const newCategory = await Category.findByIdAndUpdate(
+        req.params.id,
+        category
+      );
+      res.redirect(newCategory.url);
+    }
+  }),
+];
