@@ -23,7 +23,6 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
 
 exports.item_create_get = asyncHandler(async (req, res, next) => {
   const allCategories = await Category.find().exec();
-
   res.render("item_form", { categories: allCategories });
 });
 
@@ -67,8 +66,14 @@ exports.item_create_post = [
         errors: errors,
       });
     } else {
-      await item.save();
-      res.redirect(item.url);
+      const itemExists = await Item.findOne({ name: req.body.name }).exec();
+
+      if (itemExists) {
+        res.redirect(itemExists.url);
+      } else {
+        await item.save();
+        res.redirect(item.url);
+      }
     }
   }),
 ];
