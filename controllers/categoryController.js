@@ -25,6 +25,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   }
 
   res.render("category_detail", {
+    title: "Add a new category",
     category: category,
     category_items: itemsInCategory,
   });
@@ -54,6 +55,7 @@ exports.category_create_post = [
 
     if (!errors.isEmpty()) {
       res.render("category_form", {
+        title: "Add a new category",
         category: category,
         errors: errors.array(),
       });
@@ -113,7 +115,10 @@ exports.category_update_get = asyncHandler(async (req, res, next) => {
     err.status = 404;
     return next(err);
   }
-  res.render("category_form", { category: category });
+  res.render("category_form", {
+    title: "Update a category",
+    category: category,
+  });
 });
 
 exports.category_update_post = [
@@ -137,16 +142,17 @@ exports.category_update_post = [
 
     if (!errors.isEmpty()) {
       res.render("category_form", {
+        title: "Update a category",
         category: category,
         errors: errors.array(),
       });
       return;
     } else {
-      const newCategory = await Category.findByIdAndUpdate(
+      const categoryUpdated = await Category.findByIdAndUpdate(
         req.params.id,
         category
       );
-      res.redirect(newCategory.url);
+      res.redirect(categoryUpdated.url);
     }
   }),
 ];

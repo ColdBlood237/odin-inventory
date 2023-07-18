@@ -2,7 +2,7 @@ extends layout
 
 block content
   .p-16.bg-base-200.h-fit
-    h1.text-5xl.mb-4.font-bold Add a new item
+    h1.text-5xl.mb-4.font-bold= title
     form(action="" method="POST").flex.flex-col.gap-4
       div
         label(for="name") Name:
@@ -21,7 +21,7 @@ block content
         div.flex.flex-col.gap-2
           for category in categories
             div.flex.align-center.gap-2
-              input.checkbox(type="checkbox", name="category", id=category._id, value=category._id, checked=category.checked)
+              input(type="checkbox", name="category", id=category._id, value=category._id, checked=category.checked)
               label(for=category._id) #{category.name}   
       button.btn.btn-neutral.self-start(type="submit") Submit
     

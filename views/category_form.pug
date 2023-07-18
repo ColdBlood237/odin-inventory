@@ -2,7 +2,7 @@ extends layout
 
 block content
   .p-16.bg-base-200.h-screen
-    h1.text-5xl.mb-4.font-bold Add a new category
+    h1.text-5xl.mb-4.font-bold= title
     form(action="" method="POST").flex.flex-col.gap-4
       div
         label(for="name") Name:

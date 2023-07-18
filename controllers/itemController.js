@@ -1,7 +1,7 @@
-const { body, validationResult } = require("express-validator");
 const Item = require("../models/item");
-const asyncHandler = require("express-async-handler");
 const Category = require("../models/category");
+const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 
 exports.index = asyncHandler(async (req, res, next) => {
   res.render("index");
@@ -23,7 +23,10 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
 
 exports.item_create_get = asyncHandler(async (req, res, next) => {
   const allCategories = await Category.find().exec();
-  res.render("item_form", { categories: allCategories });
+  res.render("item_form", {
+    title: `Add an item`,
+    categories: allCategories,
+  });
 });
 
 exports.item_create_post = [
@@ -32,10 +35,7 @@ exports.item_create_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("category", "Category must not be empty")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
+  body("category.*").escape(),
   body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
   body("stock", "Stock must not be empty").trim().isLength({ min: 1 }).escape(),
 
@@ -61,6 +61,7 @@ exports.item_create_post = [
       }
 
       res.render("item_form", {
+        title: `Add an item`,
         categories: allCategories,
         item: item,
         errors: errors,
@@ -78,7 +79,7 @@ exports.item_create_post = [
   }),
 ];
 exports.item_delete_get = asyncHandler(async (req, res, next) => {
-  const item = await Item.findById(req.params.id);
+  const item = await Item.findById(req.params.id).exec();
   res.render("item_delete", { item: item });
 });
 
@@ -88,9 +89,73 @@ exports.item_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: item update GET");
+  const [item, allCategories] = await Promise.all([
+    Item.findById(req.params.id).populate("category").exec(),
+    Category.find().exec(),
+  ]);
+
+  if (item === null) {
+    const err = new Error("Item not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  for (const category of allCategories) {
+    for (const item_c of item.category) {
+      if (category._id.toString() === item_c._id.toString()) {
+        category.checked = "true";
+      }
+    }
+  }
+
+  res.render("item_form", {
+    title: `Update an item`,
+    item: item,
+    categories: allCategories,
+  });
 });
 
-exports.item_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: item update POST");
-});
+exports.item_update_post = [
+  body("name", "Name must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("description", "Description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category.*").escape(),
+  body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("stock", "Stock must not be empty").trim().isLength({ min: 1 }).escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const item = new Item({
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      stock: req.body.stock,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      const allCategories = await Category.find().exec();
+
+      // Mark our selected category as checked.
+      for (const category of allCategories) {
+        if (item.category.indexOf(category._id) > -1) {
+          category.checked = "true";
+        }
+      }
+
+      res.render("item_form", {
+        title: `Update an item`,
+        categories: allCategories,
+        item: item,
+        errors: errors,
+      });
+    } else {
+      const itemUpdated = await Item.findByIdAndUpdate(req.params.id, item);
+      res.redirect(itemUpdated.url);
+    }
+  }),
+];
