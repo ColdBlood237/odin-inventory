@@ -74,15 +74,46 @@ exports.category_create_post = [
 ];
 
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category delete GET");
+  const [category, categoryItems] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Item.find({ category: req.params.id }, "name description").exec(),
+  ]);
+
+  if (category === null) {
+    res.redirect("/inventory/categories");
+  }
+
+  res.render("category_delete", {
+    category: category,
+    category_items: categoryItems,
+  });
 });
 
 exports.category_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category delete POST");
+  const [category, categoryItems] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Item.find({ category: req.params.id }, "name description").exec(),
+  ]);
+
+  if (categoryItems.length > 0) {
+    res.render("category_delete", {
+      category: category,
+      category_items: categoryItems,
+    });
+  } else {
+    await Category.findByIdAndRemove(req.body.categoryid);
+    res.redirect("/inventory/categories");
+  }
 });
 
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category update GET");
+  const category = await Category.findById(req.params.id);
+
+  if (category === null) {
+    const err = new Error("Category not foud");
+    err.status = 404;
+    return next(err);
+  }
 });
 
 exports.category_update_post = asyncHandler(async (req, res, next) => {

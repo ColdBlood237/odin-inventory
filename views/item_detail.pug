@@ -6,6 +6,8 @@ block content
     p.text-xl #{item.description}
     .badge.badge-outline= item.category
     .flex.gap-4.my-8
-      button.btn.btn-accent Update Item 
-      button.btn.btn-secondary Delete Item
+      a(href=`/inventory/item/${item._id}/update`)
+        button.btn.btn-accent Update Item
+      a(href=`/inventory/item/${item._id}/delete`) 
+        button.btn.btn-secondary Delete Item
    

@@ -5,13 +5,22 @@ block content
     h1.text-5xl.mb-4.font-bold Items in the "#{category.name}" category
     p.text-xl #{category.description}
     .flex.gap-4.my-8
-      button.btn.btn-accent Update Category 
-      button.btn.btn-secondary Delete Category
-    p.mb-4 Items in this category:
-    .cards-container.flex.gap-16.justify-start
-      each item in category_items
-        a(href=item.url)
-          .card.w-96.bg-base-100.shadow-xl
-            .card-body
-              h2.card-title= item.name
-              p #{item.description}
+      a(href=`/inventory/category/${category._id}/update`)
+        button.btn.btn-accent Update Category 
+      a(href=`/inventory/category/${category._id}/delete`)
+        button.btn.btn-secondary Delete Category
+    if(category_items.length !== 0)
+      p.mb-4 Items in this category:
+      .cards-container.flex.gap-16.justify-start
+        each item in category_items
+          a(href=item.url)
+            .card.w-96.bg-base-100.shadow-xl
+              .card-body
+                h2.card-title= item.name
+                p #{item.description}
+    else
+      .alert.alert-info
+        svg.stroke-current.shrink-0.w-6.h-6(xmlns='http://www.w3.org/2000/svg' fill='none' viewbox='0 0 24 24')
+          path(stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z')
+        span No items in this category.
+
