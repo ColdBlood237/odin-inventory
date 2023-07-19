@@ -3,7 +3,7 @@ extends layout
 block content
   .p-16.bg-base-200.h-fit
     h1.text-5xl.mb-4.font-bold= title
-    form(action="" method="POST").flex.flex-col.gap-4
+    form(action="" method="POST" enctype="multipart/form-data").flex.flex-col.gap-4
       div
         label(for="name") Name:
         input#name.input.input-bordered.w-full(type="text", name="name", placeholder="Type here", value=(undefined===item ? "" : item.name), required="true")
@@ -16,6 +16,8 @@ block content
       div
         label(for="stock") Stock:
         input#stock.input.input-bordered.w-full(type="number", min=1, name="stock" placeholder="Type here", value=(undefined===item ? "" : item.stock), required="true")
+      div
+        input(type="file", name="image")
       div.flex.flex-col.gap-2
         label Category:
         div.flex.flex-col.gap-2
