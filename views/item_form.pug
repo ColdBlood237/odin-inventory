@@ -16,13 +16,13 @@ block content
       div
         label(for="stock") Stock:
         input#stock.input.input-bordered.w-full(type="number", min=1, name="stock" placeholder="Type here", value=(undefined===item ? "" : item.stock), required="true")
-      div
-        label.mb-8 Category:
+      div.flex.flex-col.gap-2
+        label Category:
         div.flex.flex-col.gap-2
           for category in categories
             div.flex.align-center.gap-2
               input(type="checkbox", name="category", id=category._id, value=category._id, checked=category.checked)
-              label(for=category._id) #{category.name}   
+              label(for=category._id) #{category.name} 
       button.btn.btn-neutral.self-start(type="submit") Submit
     
     if errors
