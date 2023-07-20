@@ -30,14 +30,22 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_create_post = [
+  (req, res, next) => {
+    if (!(req.body.category instanceof Array)) {
+      if (typeof req.body.category === "undefined") req.body.category = [];
+      else req.body.category = new Array(req.body.category);
+    }
+    next();
+  },
+
   body("name", "Name must not be empty").trim().isLength({ min: 1 }).escape(),
   body("description", "Description must not be empty")
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("category.*").escape(),
   body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
   body("stock", "Stock must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("category.*").escape(),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -64,7 +72,7 @@ exports.item_create_post = [
         title: `Add an item`,
         categories: allCategories,
         item: item,
-        errors: errors,
+        errors: errors.array(),
       });
     } else {
       const itemExists = await Item.findOne({ name: req.body.name }).exec();
@@ -116,16 +124,25 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_update_post = [
+  (req, res, next) => {
+    if (!(req.body.category instanceof Array)) {
+      if (typeof req.body.category === "undefined") req.body.category = [];
+      else req.body.category = new Array(req.body.category);
+    }
+    next();
+  },
+
   body("name", "Name must not be empty").trim().isLength({ min: 1 }).escape(),
   body("description", "Description must not be empty")
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body("category.*").escape(),
   body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
   body("stock", "Stock must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("category.*").escape(),
 
   asyncHandler(async (req, res, next) => {
+    let test_1 = req.body.category;
     const errors = validationResult(req);
 
     const item = new Item({
@@ -149,9 +166,9 @@ exports.item_update_post = [
 
       res.render("item_form", {
         title: `Update an item`,
-        categories: allCategories,
         item: item,
-        errors: errors,
+        categories: allCategories,
+        errors: errors.array(),
       });
     } else {
       const itemUpdated = await Item.findByIdAndUpdate(req.params.id, item);

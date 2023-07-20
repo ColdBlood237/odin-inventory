@@ -9,7 +9,7 @@ block content
         input#name.input.input-bordered.w-full(type="text", name="name", placeholder="Type here", value=(undefined===category ? "" : category.name))
       div
         label(for="description") Description:
-        input#description.input.input-bordered.w-full(type="text", name="description" placeholder="Type here", value=(undefined===category ? "" : category.name))
+        input#description.input.input-bordered.w-full(required="true", type="text", name="description" placeholder="Type here", value=(undefined===category ? "" : category.description))
       button.btn.btn-neutral.self-start(type="submit") Submit
     
     if errors
