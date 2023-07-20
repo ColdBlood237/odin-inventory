@@ -2094,6 +2094,22 @@ html {
   border-radius: var(--rounded-box, 1rem);
 }
 
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.bottom-0 {
+  bottom: 0px;
+}
+
+.top-0 {
+  top: 0px;
+}
+
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
