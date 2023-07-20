@@ -2,13 +2,15 @@ const Item = require("../models/item");
 const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const fs = require("fs");
+const path = require("path");
 
 exports.index = asyncHandler(async (req, res, next) => {
   res.render("index");
 });
 
 exports.item_list = asyncHandler(async (req, res, next) => {
-  const allItems = await Item.find({}, "name category price")
+  const allItems = await Item.find({}, "name category price img")
     .sort({ name: 1 })
     .populate("category")
     .exec();
@@ -56,6 +58,12 @@ exports.item_create_post = [
       category: req.body.category,
       price: req.body.price,
       stock: req.body.stock,
+      img: {
+        data: fs.readFileSync(
+          path.join(__dirname + "/../uploads/" + req.file.filename)
+        ),
+        contentType: "image/png",
+      },
     });
 
     if (!errors.isEmpty()) {
@@ -142,7 +150,6 @@ exports.item_update_post = [
   body("category.*").escape(),
 
   asyncHandler(async (req, res, next) => {
-    let test_1 = req.body.category;
     const errors = validationResult(req);
 
     const item = new Item({
@@ -151,6 +158,12 @@ exports.item_update_post = [
       category: req.body.category,
       price: req.body.price,
       stock: req.body.stock,
+      img: {
+        data: fs.readFileSync(
+          path.join(__dirname + "/../uploads/" + req.file.filename)
+        ),
+        contentType: "image/png",
+      },
       _id: req.params.id,
     });
 

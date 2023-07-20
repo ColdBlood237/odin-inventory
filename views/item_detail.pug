@@ -1,18 +1,21 @@
 extends layout 
 
 block content
-  .p-16.bg-base-200.h-screen.flex.flex-col.gap-4
-    h1.text-5xl.mb-4.font-bold #{item.name}
-    p.text-xl #{item.description}
-    div
-      each category in item.category
-        a(href=category.url)
-          .badge.badge-outline.mr-1= category.name
-    p.text-xl price: $#{item.price}
-    p.text-xl stock: #{item.stock}
-    .flex.gap-4.my-8
-      a(href=`/inventory/item/${item._id}/update`)
-        button.btn.btn-accent Update Item
-      a(href=`/inventory/item/${item._id}/delete`) 
-        button.btn.btn-secondary Delete Item
+  .p-16.bg-base-200.min-h-screen.flex.gap-16.justify-center
+    div(class="w-1/3")
+      img(src=`data:image/${item.img.contentType};base64,${item.img.data.toString('base64')}` alt="")
+    .flex.flex-col.gap-4(class="w-fit")
+      h1.text-5xl.mb-4.font-bold #{item.name}
+      p.text-xl #{item.description}
+      div
+        each category in item.category
+          a(href=category.url)
+            .badge.badge-outline.mr-1= category.name
+      p.text-xl price: $#{item.price}
+      p.text-xl stock: #{item.stock}
+      .flex.gap-4.my-8
+        a(href=`/inventory/item/${item._id}/update`)
+          button.btn.btn-accent Update Item
+        a(href=`/inventory/item/${item._id}/delete`) 
+          button.btn.btn-secondary Delete Item
    

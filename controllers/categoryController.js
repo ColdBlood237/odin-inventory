@@ -2,6 +2,8 @@ const Category = require("../models/category");
 const Item = require("../models/item");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const fs = require("fs");
+const path = require("path");
 
 exports.category_list = asyncHandler(async (req, res, next) => {
   const allCategories = await Category.find().exec();
@@ -25,7 +27,6 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   }
 
   res.render("category_detail", {
-    title: "Add a new category",
     category: category,
     category_items: itemsInCategory,
   });
@@ -48,9 +49,17 @@ exports.category_create_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
+    let test = req.file.filename;
+
     const category = new Category({
       name: req.body.name,
       description: req.body.description,
+      img: {
+        data: fs.readFileSync(
+          path.join(__dirname + "/../uploads/" + req.file.filename)
+        ),
+        contentType: "image/png",
+      },
     });
 
     if (!errors.isEmpty()) {
@@ -137,6 +146,12 @@ exports.category_update_post = [
     const category = new Category({
       name: req.body.name,
       description: req.body.description,
+      img: {
+        data: fs.readFileSync(
+          path.join(__dirname + "/../uploads/" + req.file.filename)
+        ),
+        contentType: "image/png",
+      },
       _id: req.params.id,
     });
 
