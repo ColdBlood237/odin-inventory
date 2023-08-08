@@ -11,6 +11,12 @@ Features
 - CRUD operations on items and categories
 - Store images in database
 
+Installation
+------------
+
+Install this app locally by running:
+- npm start
+
 Support
 -------
 
